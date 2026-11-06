@@ -1,0 +1,2523 @@
+{
+  "run_id": "batch_m6-live-gemini_seed5",
+  "scenario": "scenarios/default.yaml",
+  "seed": 5,
+  "config_snapshot": {
+    "app": {
+      "llm": {
+        "provider": "google_genai",
+        "models": {
+          "agents": "gemini-3.6-flash",
+          "humans": "gemini-3.5-flash-lite"
+        },
+        "temperature": {
+          "agents": null,
+          "humans": null
+        },
+        "retry": {
+          "max_attempts": 4,
+          "base_delay_s": 1.0,
+          "max_delay_s": 20.0
+        }
+      },
+      "runtime": {
+        "max_ticks": 30,
+        "max_steps_per_turn": 12,
+        "max_negotiation_rounds": 4,
+        "runs_dir": "runs"
+      },
+      "faults": {
+        "seed_salt": 0,
+        "retry": {
+          "max_attempts": 3,
+          "base_delay_s": 0.2,
+          "max_delay_s": 2.0
+        },
+        "tool_timeout_s": 5.0,
+        "default": {
+          "p_error": 0.1,
+          "p_timeout": 0.05
+        },
+        "tools": {
+          "book_trip": {
+            "p_error": 0.2,
+            "p_timeout": 0.1
+          },
+          "rent_equipment": {
+            "p_error": 0.2,
+            "p_timeout": 0.1
+          }
+        }
+      },
+      "humans": {
+        "provider": "llm",
+        "prompts": {
+          "human_a": "prompts\\human_alice.md",
+          "human_b": "prompts\\human_bob.md"
+        }
+      },
+      "observability": {
+        "log_level": "INFO",
+        "langsmith": "auto"
+      },
+      "prices": {
+        "gemini-3.6-flash": {
+          "input": 1.5,
+          "output": 7.5
+        },
+        "gemini-3.5-flash-lite": {
+          "input": 0.3,
+          "output": 2.5
+        }
+      }
+    },
+    "agents": {
+      "agent_a": {
+        "name": "agent_a",
+        "role": "Assistant of Alice, the trip organizer. Plans the joint hike and books it.",
+        "human": "human_a",
+        "instructions_path": "prompts\\agent_a.md",
+        "local_tools": [
+          "send_to_human",
+          "send_to_peer",
+          "end_turn",
+          "get_user_profile",
+          "get_calendar",
+          "get_inventory",
+          "build_constraints",
+          "merge_constraints",
+          "rank_dates",
+          "rank_trails",
+          "check_equipment"
+        ],
+        "mcp_servers": {
+          "weather": [
+            "list_locations",
+            "get_forecast"
+          ],
+          "trails": [
+            "search_trails",
+            "get_trail",
+            "book_trip"
+          ],
+          "gear": [
+            "required_gear"
+          ]
+        },
+        "max_steps_per_turn": null,
+        "compact_tool_results": [
+          "get_forecast",
+          "search_trails",
+          "get_trail"
+        ]
+      },
+      "agent_b": {
+        "name": "agent_b",
+        "role": "Assistant of Bob, the trip participant. Shares derived constraints with consent and rents gear.",
+        "human": "human_b",
+        "instructions_path": "prompts\\agent_b.md",
+        "local_tools": [
+          "send_to_human",
+          "send_to_peer",
+          "end_turn",
+          "get_user_profile",
+          "get_calendar",
+          "get_inventory",
+          "build_constraints",
+          "check_equipment"
+        ],
+        "mcp_servers": {
+          "gear": [
+            "rent_equipment"
+          ]
+        },
+        "max_steps_per_turn": null,
+        "compact_tool_results": []
+      }
+    }
+  },
+  "events": [
+    {
+      "tick": 0,
+      "seq": 1,
+      "actor": "human_a",
+      "kind": "message",
+      "from": "human_a",
+      "to": "agent_a",
+      "msg_id": "human_a-1",
+      "message_kind": "info",
+      "text": "Hi! I'd like to plan a day hike in Picos de Europa with my friend Bob sometime in the next two weeks. Nothing too extreme, my knee isn't great on long descents. Can you sort it out?",
+      "ts": 5.3116
+    },
+    {
+      "tick": 0,
+      "seq": 2,
+      "actor": "human_b",
+      "kind": "message",
+      "from": "human_b",
+      "to": "agent_b",
+      "msg_id": "human_b-1",
+      "message_kind": "info",
+      "text": "Heads-up: my friend Alice is planning a hike for the two of us. I can only do weekends.",
+      "ts": 5.3116
+    },
+    {
+      "tick": 0,
+      "seq": 3,
+      "actor": "agent_a",
+      "kind": "turn_start",
+      "inbox": [
+        "human_a-1"
+      ],
+      "ts": 5.3117
+    },
+    {
+      "tick": 0,
+      "seq": 4,
+      "actor": "agent_a",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 1,
+      "input_tokens": 3351,
+      "output_tokens": 2367,
+      "latency_ms": 12666.5,
+      "tool_calls": [
+        "get_user_profile",
+        "get_calendar",
+        "list_locations",
+        "search_trails",
+        "build_constraints",
+        "send_to_peer"
+      ],
+      "compacted": 0,
+      "ts": 17.9806
+    },
+    {
+      "tick": 0,
+      "seq": 5,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "get_user_profile",
+      "call_id": "get_user_profile#1",
+      "args": {},
+      "ts": 17.984
+    },
+    {
+      "tick": 0,
+      "seq": 6,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "get_user_profile",
+      "call_id": "get_user_profile#1",
+      "ok": true,
+      "ts": 17.984
+    },
+    {
+      "tick": 0,
+      "seq": 7,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "get_calendar",
+      "call_id": "get_calendar#1",
+      "args": {},
+      "ts": 17.9841
+    },
+    {
+      "tick": 0,
+      "seq": 8,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "get_calendar",
+      "call_id": "get_calendar#1",
+      "ok": true,
+      "ts": 17.9841
+    },
+    {
+      "tick": 0,
+      "seq": 9,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "list_locations",
+      "call_id": "call_10815223056750720561",
+      "args": {},
+      "server": "weather",
+      "ts": 17.9842
+    },
+    {
+      "tick": 0,
+      "seq": 10,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "list_locations",
+      "call_id": "call_10815223056750720561",
+      "ok": true,
+      "error": null,
+      "attempt": 1,
+      "fault": "ok",
+      "latency_ms": 6,
+      "ts": 17.9899
+    },
+    {
+      "tick": 0,
+      "seq": 11,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "search_trails",
+      "call_id": "call_10815223056750722696",
+      "args": {},
+      "server": "trails",
+      "ts": 17.9845
+    },
+    {
+      "tick": 0,
+      "seq": 12,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "search_trails",
+      "call_id": "call_10815223056750722696",
+      "ok": false,
+      "error": "TransientError: 503 Service Unavailable (injected)",
+      "attempt": 1,
+      "fault": "error",
+      "latency_ms": 0,
+      "ts": 17.9846
+    },
+    {
+      "tick": 0,
+      "seq": 13,
+      "actor": "agent_a",
+      "kind": "retry",
+      "tool": "search_trails",
+      "call_id": "call_10815223056750722696",
+      "attempt": 1,
+      "next_attempt": 2,
+      "wait_s": 0.2,
+      "error": "TransientToolError: TransientError: 503 Service Unavailable (injected)",
+      "ts": 17.9849
+    },
+    {
+      "tick": 0,
+      "seq": 14,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "search_trails",
+      "call_id": "call_10815223056750722696",
+      "ok": true,
+      "error": null,
+      "attempt": 2,
+      "fault": "ok",
+      "latency_ms": 5,
+      "ts": 18.2105
+    },
+    {
+      "tick": 0,
+      "seq": 15,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "build_constraints",
+      "call_id": "build_constraints#1",
+      "args": {
+        "overrides_json": ""
+      },
+      "ts": 17.985
+    },
+    {
+      "tick": 0,
+      "seq": 16,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "build_constraints",
+      "call_id": "build_constraints#1",
+      "ok": true,
+      "ts": 17.985
+    },
+    {
+      "tick": 0,
+      "seq": 17,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "send_to_peer",
+      "call_id": "send_to_peer#1",
+      "args": {
+        "performative": "REQUEST_CONSTRAINTS",
+        "payload_json": "{\"window_start\": \"2026-11-17\", \"window_end\": \"2026-11-30\", \"trip_type\": \"day_hike\"}",
+        "text": "Hello! Please share Bob's constraints for the planning window 2026-11-17 to 2026-11-30.",
+        "in_reply_to": ""
+      },
+      "ts": 17.9851
+    },
+    {
+      "tick": 0,
+      "seq": 18,
+      "actor": "agent_a",
+      "kind": "message",
+      "from": "agent_a",
+      "to": "agent_b",
+      "msg_id": "agent_a-1",
+      "performative": "REQUEST_CONSTRAINTS",
+      "conversation_id": "picos-joint-day-hike-seed5",
+      "in_reply_to": null,
+      "payload": {
+        "window_start": "2026-11-17",
+        "window_end": "2026-11-30",
+        "trip_type": "day_hike"
+      },
+      "text": "Hello! Please share Bob's constraints for the planning window 2026-11-17 to 2026-11-30.",
+      "ts": 17.9852
+    },
+    {
+      "tick": 0,
+      "seq": 19,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "send_to_peer",
+      "call_id": "send_to_peer#1",
+      "ok": true,
+      "ts": 17.9852
+    },
+    {
+      "tick": 0,
+      "seq": 20,
+      "actor": "agent_a",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 2,
+      "input_tokens": 9480,
+      "output_tokens": 317,
+      "latency_ms": 2349.9,
+      "tool_calls": [
+        "get_forecast",
+        "get_forecast",
+        "get_forecast"
+      ],
+      "compacted": 0,
+      "ts": 20.5621
+    },
+    {
+      "tick": 0,
+      "seq": 21,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "get_forecast",
+      "call_id": "call_8773137656894330134",
+      "args": {
+        "location_id": "central_massif",
+        "start_date": "2026-11-17",
+        "end_date": "2026-11-30"
+      },
+      "server": "weather",
+      "ts": 20.5645
+    },
+    {
+      "tick": 0,
+      "seq": 22,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "get_forecast",
+      "call_id": "call_8773137656894330134",
+      "ok": true,
+      "error": null,
+      "attempt": 1,
+      "fault": "ok",
+      "latency_ms": 5,
+      "ts": 20.5695
+    },
+    {
+      "tick": 0,
+      "seq": 23,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "get_forecast",
+      "call_id": "call_8773137656894330099",
+      "args": {
+        "end_date": "2026-11-30",
+        "location_id": "eastern_liebana",
+        "start_date": "2026-11-17"
+      },
+      "server": "weather",
+      "ts": 20.5649
+    },
+    {
+      "tick": 0,
+      "seq": 24,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "get_forecast",
+      "call_id": "call_8773137656894330099",
+      "ok": true,
+      "error": null,
+      "attempt": 1,
+      "fault": "ok",
+      "latency_ms": 8,
+      "ts": 20.5726
+    },
+    {
+      "tick": 0,
+      "seq": 25,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "get_forecast",
+      "call_id": "call_8773137656894330064",
+      "args": {
+        "location_id": "western_massif",
+        "start_date": "2026-11-17",
+        "end_date": "2026-11-30"
+      },
+      "server": "weather",
+      "ts": 20.5651
+    },
+    {
+      "tick": 0,
+      "seq": 26,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "get_forecast",
+      "call_id": "call_8773137656894330064",
+      "ok": true,
+      "error": null,
+      "attempt": 1,
+      "fault": "ok",
+      "latency_ms": 9,
+      "ts": 20.5737
+    },
+    {
+      "tick": 0,
+      "seq": 27,
+      "actor": "agent_a",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 3,
+      "input_tokens": 15803,
+      "output_tokens": 85,
+      "latency_ms": 1520.7,
+      "tool_calls": [
+        "end_turn"
+      ],
+      "compacted": 0,
+      "ts": 22.0959
+    },
+    {
+      "tick": 0,
+      "seq": 28,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "end_turn",
+      "call_id": "end_turn#1",
+      "args": {
+        "reason": "Sent REQUEST_CONSTRAINTS to agent_b and fetched forecasts for all locations. Waiting for Bob's constraints."
+      },
+      "ts": 22.098
+    },
+    {
+      "tick": 0,
+      "seq": 29,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "end_turn",
+      "call_id": "end_turn#1",
+      "ok": true,
+      "ts": 22.098
+    },
+    {
+      "tick": 0,
+      "seq": 30,
+      "actor": "agent_a",
+      "kind": "turn_end",
+      "reason": "end_turn",
+      "steps": 3,
+      "ts": 22.0998
+    },
+    {
+      "tick": 0,
+      "seq": 31,
+      "actor": "agent_b",
+      "kind": "turn_start",
+      "inbox": [
+        "human_b-1"
+      ],
+      "ts": 5.3131
+    },
+    {
+      "tick": 0,
+      "seq": 32,
+      "actor": "agent_b",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 1,
+      "input_tokens": 2342,
+      "output_tokens": 120,
+      "latency_ms": 1664.6,
+      "tool_calls": [
+        "get_user_profile",
+        "get_calendar"
+      ],
+      "compacted": 0,
+      "ts": 6.9793
+    },
+    {
+      "tick": 0,
+      "seq": 33,
+      "actor": "agent_b",
+      "kind": "tool_call",
+      "tool": "get_user_profile",
+      "call_id": "get_user_profile#1",
+      "args": {},
+      "ts": 6.9814
+    },
+    {
+      "tick": 0,
+      "seq": 34,
+      "actor": "agent_b",
+      "kind": "tool_result",
+      "tool": "get_user_profile",
+      "call_id": "get_user_profile#1",
+      "ok": true,
+      "ts": 6.9814
+    },
+    {
+      "tick": 0,
+      "seq": 35,
+      "actor": "agent_b",
+      "kind": "tool_call",
+      "tool": "get_calendar",
+      "call_id": "get_calendar#1",
+      "args": {},
+      "ts": 6.9815
+    },
+    {
+      "tick": 0,
+      "seq": 36,
+      "actor": "agent_b",
+      "kind": "tool_result",
+      "tool": "get_calendar",
+      "call_id": "get_calendar#1",
+      "ok": true,
+      "ts": 6.9815
+    },
+    {
+      "tick": 0,
+      "seq": 37,
+      "actor": "agent_b",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 2,
+      "input_tokens": 2606,
+      "output_tokens": 79,
+      "latency_ms": 1063.5,
+      "tool_calls": [
+        "end_turn"
+      ],
+      "compacted": 0,
+      "ts": 8.0462
+    },
+    {
+      "tick": 0,
+      "seq": 38,
+      "actor": "agent_b",
+      "kind": "tool_call",
+      "tool": "end_turn",
+      "call_id": "end_turn#1",
+      "args": {
+        "reason": "Received heads-up from Bob and fetched profile and calendar."
+      },
+      "ts": 8.0484
+    },
+    {
+      "tick": 0,
+      "seq": 39,
+      "actor": "agent_b",
+      "kind": "tool_result",
+      "tool": "end_turn",
+      "call_id": "end_turn#1",
+      "ok": true,
+      "ts": 8.0484
+    },
+    {
+      "tick": 0,
+      "seq": 40,
+      "actor": "agent_b",
+      "kind": "turn_end",
+      "reason": "end_turn",
+      "steps": 2,
+      "ts": 8.0501
+    },
+    {
+      "tick": 1,
+      "seq": 41,
+      "actor": "agent_b",
+      "kind": "turn_start",
+      "inbox": [
+        "agent_a-1"
+      ],
+      "ts": 22.0999
+    },
+    {
+      "tick": 1,
+      "seq": 42,
+      "actor": "agent_b",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 1,
+      "input_tokens": 2854,
+      "output_tokens": 264,
+      "latency_ms": 1776.6,
+      "tool_calls": [
+        "update_plan_draft",
+        "send_to_human"
+      ],
+      "compacted": 0,
+      "ts": 23.8778
+    },
+    {
+      "tick": 1,
+      "seq": 43,
+      "actor": "agent_b",
+      "kind": "tool_call",
+      "tool": "update_plan_draft",
+      "call_id": "call_7004659888972069931",
+      "args": {
+        "key": "request_msg_id",
+        "value": "agent_a-1"
+      },
+      "ts": 23.8802
+    },
+    {
+      "tick": 1,
+      "seq": 44,
+      "actor": "agent_b",
+      "kind": "tool_result",
+      "tool": "update_plan_draft",
+      "call_id": "call_7004659888972069931",
+      "ok": true,
+      "ts": 23.8802
+    },
+    {
+      "tick": 1,
+      "seq": 45,
+      "actor": "agent_b",
+      "kind": "tool_call",
+      "tool": "send_to_human",
+      "call_id": "send_to_human#1",
+      "args": {
+        "text": "May I share your trip constraints (available dates and hiking limits) with Alice's assistant for planning the day hike? Also, do you have any specific restrictions or concerns for this hike?",
+        "kind": "question",
+        "plan_json": ""
+      },
+      "ts": 23.8803
+    },
+    {
+      "tick": 1,
+      "seq": 46,
+      "actor": "agent_b",
+      "kind": "message",
+      "from": "agent_b",
+      "to": "human_b",
+      "msg_id": "agent_b-1",
+      "message_kind": "question",
+      "text": "May I share your trip constraints (available dates and hiking limits) with Alice's assistant for planning the day hike? Also, do you have any specific restrictions or concerns for this hike?",
+      "ts": 23.8803
+    },
+    {
+      "tick": 1,
+      "seq": 47,
+      "actor": "agent_b",
+      "kind": "tool_result",
+      "tool": "send_to_human",
+      "call_id": "send_to_human#1",
+      "ok": true,
+      "ts": 23.8803
+    },
+    {
+      "tick": 1,
+      "seq": 48,
+      "actor": "agent_b",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 2,
+      "input_tokens": 3183,
+      "output_tokens": 34,
+      "latency_ms": 1131.7,
+      "tool_calls": [
+        "end_turn"
+      ],
+      "compacted": 0,
+      "ts": 25.0135
+    },
+    {
+      "tick": 1,
+      "seq": 49,
+      "actor": "agent_b",
+      "kind": "tool_call",
+      "tool": "end_turn",
+      "call_id": "end_turn#2",
+      "args": {
+        "reason": "Asked Bob for consent to share constraints and any specific restrictions."
+      },
+      "ts": 25.0153
+    },
+    {
+      "tick": 1,
+      "seq": 50,
+      "actor": "agent_b",
+      "kind": "tool_result",
+      "tool": "end_turn",
+      "call_id": "end_turn#2",
+      "ok": true,
+      "ts": 25.0154
+    },
+    {
+      "tick": 1,
+      "seq": 51,
+      "actor": "agent_b",
+      "kind": "turn_end",
+      "reason": "end_turn",
+      "steps": 2,
+      "ts": 25.0171
+    },
+    {
+      "tick": 2,
+      "seq": 52,
+      "actor": "human_b",
+      "kind": "turn_start",
+      "inbox": [
+        "agent_b-1"
+      ],
+      "ts": 25.0171
+    },
+    {
+      "tick": 2,
+      "seq": 53,
+      "actor": "human_b",
+      "kind": "llm_call",
+      "model": "gemini-3.5-flash-lite",
+      "input_tokens": 371,
+      "output_tokens": 48,
+      "latency_ms": 746.8,
+      "ts": 25.764
+    },
+    {
+      "tick": 2,
+      "seq": 54,
+      "actor": "human_b",
+      "kind": "message",
+      "from": "human_b",
+      "to": "agent_b",
+      "msg_id": "human_b-2",
+      "message_kind": "info",
+      "text": "Yes, you can share. I can only hike on weekends, and I am afraid of heights so I must avoid exposed paths with drops.",
+      "ts": 25.7641
+    },
+    {
+      "tick": 2,
+      "seq": 55,
+      "actor": "human_b",
+      "kind": "turn_end",
+      "reason": "reply",
+      "accepts_final_plan": null,
+      "ts": 25.7641
+    },
+    {
+      "tick": 3,
+      "seq": 56,
+      "actor": "agent_b",
+      "kind": "turn_start",
+      "inbox": [
+        "human_b-2"
+      ],
+      "ts": 25.7642
+    },
+    {
+      "tick": 3,
+      "seq": 57,
+      "actor": "agent_b",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 1,
+      "input_tokens": 3301,
+      "output_tokens": 217,
+      "latency_ms": 1633.8,
+      "tool_calls": [
+        "build_constraints"
+      ],
+      "compacted": 0,
+      "ts": 27.3995
+    },
+    {
+      "tick": 3,
+      "seq": 58,
+      "actor": "agent_b",
+      "kind": "tool_call",
+      "tool": "build_constraints",
+      "call_id": "build_constraints#1",
+      "args": {
+        "overrides_json": "{\"avoid_exposure\": true}"
+      },
+      "ts": 27.4013
+    },
+    {
+      "tick": 3,
+      "seq": 59,
+      "actor": "agent_b",
+      "kind": "tool_result",
+      "tool": "build_constraints",
+      "call_id": "build_constraints#1",
+      "ok": true,
+      "ts": 27.4014
+    },
+    {
+      "tick": 3,
+      "seq": 60,
+      "actor": "agent_b",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 2,
+      "input_tokens": 3620,
+      "output_tokens": 380,
+      "latency_ms": 2981.3,
+      "tool_calls": [
+        "send_to_peer"
+      ],
+      "compacted": 0,
+      "ts": 30.3837
+    },
+    {
+      "tick": 3,
+      "seq": 61,
+      "actor": "agent_b",
+      "kind": "tool_call",
+      "tool": "send_to_peer",
+      "call_id": "send_to_peer#1",
+      "args": {
+        "performative": "CONSTRAINTS",
+        "payload_json": "{\"available_dates\":[\"2026-11-21\",\"2026-11-22\",\"2026-11-28\",\"2026-11-29\"],\"avoid_exposure\":true,\"max_difficulty\":\"hard\",\"max_duration_h\":9,\"max_elevation_gain_m\":1500,\"notes\":[]}",
+        "text": "Here are Bob's trip constraints; Bob needs routes without exposed sections.",
+        "in_reply_to": "agent_a-1"
+      },
+      "ts": 30.3858
+    },
+    {
+      "tick": 3,
+      "seq": 62,
+      "actor": "agent_b",
+      "kind": "message",
+      "from": "agent_b",
+      "to": "agent_a",
+      "msg_id": "agent_b-2",
+      "performative": "CONSTRAINTS",
+      "conversation_id": "picos-joint-day-hike-seed5",
+      "in_reply_to": "agent_a-1",
+      "payload": {
+        "available_dates": [
+          "2026-11-21",
+          "2026-11-22",
+          "2026-11-28",
+          "2026-11-29"
+        ],
+        "max_difficulty": "hard",
+        "max_elevation_gain_m": 1500,
+        "max_duration_h": 9.0,
+        "avoid_exposure": true,
+        "notes": []
+      },
+      "text": "Here are Bob's trip constraints; Bob needs routes without exposed sections.",
+      "ts": 30.3858
+    },
+    {
+      "tick": 3,
+      "seq": 63,
+      "actor": "agent_b",
+      "kind": "tool_result",
+      "tool": "send_to_peer",
+      "call_id": "send_to_peer#1",
+      "ok": true,
+      "ts": 30.3859
+    },
+    {
+      "tick": 3,
+      "seq": 64,
+      "actor": "agent_b",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 3,
+      "input_tokens": 4034,
+      "output_tokens": 32,
+      "latency_ms": 909.1,
+      "tool_calls": [
+        "end_turn"
+      ],
+      "compacted": 0,
+      "ts": 31.2961
+    },
+    {
+      "tick": 3,
+      "seq": 65,
+      "actor": "agent_b",
+      "kind": "tool_call",
+      "tool": "end_turn",
+      "call_id": "end_turn#3",
+      "args": {
+        "reason": "Sent Bob's constraints to agent_a."
+      },
+      "ts": 31.2978
+    },
+    {
+      "tick": 3,
+      "seq": 66,
+      "actor": "agent_b",
+      "kind": "tool_result",
+      "tool": "end_turn",
+      "call_id": "end_turn#3",
+      "ok": true,
+      "ts": 31.2978
+    },
+    {
+      "tick": 3,
+      "seq": 67,
+      "actor": "agent_b",
+      "kind": "turn_end",
+      "reason": "end_turn",
+      "steps": 3,
+      "ts": 31.2994
+    },
+    {
+      "tick": 4,
+      "seq": 68,
+      "actor": "agent_a",
+      "kind": "turn_start",
+      "inbox": [
+        "agent_b-2"
+      ],
+      "ts": 31.2995
+    },
+    {
+      "tick": 4,
+      "seq": 69,
+      "actor": "agent_a",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 1,
+      "input_tokens": 7153,
+      "output_tokens": 1023,
+      "latency_ms": 4929.7,
+      "tool_calls": [
+        "merge_constraints"
+      ],
+      "compacted": 4,
+      "ts": 36.2309
+    },
+    {
+      "tick": 4,
+      "seq": 70,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "merge_constraints",
+      "call_id": "merge_constraints#1",
+      "args": {
+        "constraints_json_list": [
+          "{\"available_dates\":[\"2026-11-17\",\"2026-11-18\",\"2026-11-19\",\"2026-11-20\",\"2026-11-21\",\"2026-11-22\",\"2026-11-23\",\"2026-11-27\",\"2026-11-28\",\"2026-11-29\",\"2026-11-30\"],\"avoid_exposure\":false,\"max_difficulty\":\"moderate\",\"max_duration_h\":6,\"max_elevation_gain_m\":800,\"notes\":[\"avoid long steep descents\",\"old knee injury\"]}",
+          "{\"available_dates\": [\"2026-11-21\", \"2026-11-22\", \"2026-11-28\", \"2026-11-29\"], \"avoid_exposure\": true, \"max_difficulty\": \"hard\", \"max_duration_h\": 9.0, \"max_elevation_gain_m\": 1500, \"notes\": []}"
+        ]
+      },
+      "ts": 36.233
+    },
+    {
+      "tick": 4,
+      "seq": 71,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "merge_constraints",
+      "call_id": "merge_constraints#1",
+      "ok": true,
+      "ts": 36.2331
+    },
+    {
+      "tick": 4,
+      "seq": 72,
+      "actor": "agent_a",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 2,
+      "input_tokens": 8290,
+      "output_tokens": 304,
+      "latency_ms": 2038.5,
+      "tool_calls": [
+        "rank_dates"
+      ],
+      "compacted": 4,
+      "ts": 38.2728
+    },
+    {
+      "tick": 4,
+      "seq": 73,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "rank_dates",
+      "call_id": "rank_dates#1",
+      "args": {
+        "constraints_json": "{\"available_dates\":[\"2026-11-21\",\"2026-11-22\",\"2026-11-28\",\"2026-11-29\"],\"avoid_exposure\":true,\"max_difficulty\":\"moderate\",\"max_duration_h\":6,\"max_elevation_gain_m\":800,\"notes\":[\"avoid long steep descents\",\"old knee injury\"]}",
+        "location_ids": [
+          "central_massif",
+          "eastern_liebana",
+          "western_massif"
+        ]
+      },
+      "ts": 38.2749
+    },
+    {
+      "tick": 4,
+      "seq": 74,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "rank_dates",
+      "call_id": "rank_dates#1",
+      "ok": true,
+      "ts": 38.2751
+    },
+    {
+      "tick": 4,
+      "seq": 75,
+      "actor": "agent_a",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 3,
+      "input_tokens": 8840,
+      "output_tokens": 183,
+      "latency_ms": 1478.0,
+      "tool_calls": [
+        "rank_trails"
+      ],
+      "compacted": 4,
+      "ts": 39.7545
+    },
+    {
+      "tick": 4,
+      "seq": 76,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "rank_trails",
+      "call_id": "rank_trails#1",
+      "args": {
+        "constraints_json": "{\"available_dates\":[\"2026-11-21\",\"2026-11-22\",\"2026-11-28\",\"2026-11-29\"],\"avoid_exposure\":true,\"max_difficulty\":\"moderate\",\"max_duration_h\":6,\"max_elevation_gain_m\":800,\"notes\":[\"avoid long steep descents\",\"old knee injury\"]}",
+        "date": "2026-11-22"
+      },
+      "ts": 39.7568
+    },
+    {
+      "tick": 4,
+      "seq": 77,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "rank_trails",
+      "call_id": "rank_trails#1",
+      "ok": true,
+      "ts": 39.757
+    },
+    {
+      "tick": 4,
+      "seq": 78,
+      "actor": "agent_a",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 4,
+      "input_tokens": 10353,
+      "output_tokens": 140,
+      "latency_ms": 1882.4,
+      "tool_calls": [
+        "required_gear"
+      ],
+      "compacted": 4,
+      "ts": 41.6407
+    },
+    {
+      "tick": 4,
+      "seq": 79,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "required_gear",
+      "call_id": "call_8089862880196638920",
+      "args": {
+        "trail_id": "vega-de-ario",
+        "date": "2026-11-22"
+      },
+      "server": "gear",
+      "ts": 41.6428
+    },
+    {
+      "tick": 4,
+      "seq": 80,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "required_gear",
+      "call_id": "call_8089862880196638920",
+      "ok": false,
+      "error": "TransientError: 503 Service Unavailable (injected)",
+      "attempt": 1,
+      "fault": "error",
+      "latency_ms": 0,
+      "ts": 41.6429
+    },
+    {
+      "tick": 4,
+      "seq": 81,
+      "actor": "agent_a",
+      "kind": "retry",
+      "tool": "required_gear",
+      "call_id": "call_8089862880196638920",
+      "attempt": 1,
+      "next_attempt": 2,
+      "wait_s": 0.2,
+      "error": "TransientToolError: TransientError: 503 Service Unavailable (injected)",
+      "ts": 41.643
+    },
+    {
+      "tick": 4,
+      "seq": 82,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "required_gear",
+      "call_id": "call_8089862880196638920",
+      "ok": true,
+      "error": null,
+      "attempt": 2,
+      "fault": "ok",
+      "latency_ms": 13,
+      "ts": 41.8626
+    },
+    {
+      "tick": 4,
+      "seq": 83,
+      "actor": "agent_a",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 5,
+      "input_tokens": 10660,
+      "output_tokens": 597,
+      "latency_ms": 3556.2,
+      "tool_calls": [
+        "send_to_peer"
+      ],
+      "compacted": 4,
+      "ts": 45.4208
+    },
+    {
+      "tick": 4,
+      "seq": 84,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "send_to_peer",
+      "call_id": "send_to_peer#2",
+      "args": {
+        "performative": "PROPOSAL",
+        "payload_json": "{\"date\": \"2026-11-22\", \"trail_id\": \"vega-de-ario\", \"trail_summary\": \"Vega de Ario (PR-PNPE 4) from Lago de la Ercina, 5h, +700m gain, moderate difficulty, no exposure\", \"required_gear\": [\"backpack\", \"boots\", \"gaiters\", \"headlamp\", \"trekking_poles\", \"warm_layer\", \"water_bottle\", \"waterproof_jacket\"], \"proposal_round\": 1}",
+        "text": "Proposal for day hike on 2026-11-22 at Vega de Ario.",
+        "in_reply_to": "agent_b-2"
+      },
+      "ts": 45.4229
+    },
+    {
+      "tick": 4,
+      "seq": 85,
+      "actor": "agent_a",
+      "kind": "message",
+      "from": "agent_a",
+      "to": "agent_b",
+      "msg_id": "agent_a-2",
+      "performative": "PROPOSAL",
+      "conversation_id": "picos-joint-day-hike-seed5",
+      "in_reply_to": "agent_b-2",
+      "payload": {
+        "date": "2026-11-22",
+        "trail_id": "vega-de-ario",
+        "trail_summary": "Vega de Ario (PR-PNPE 4) from Lago de la Ercina, 5h, +700m gain, moderate difficulty, no exposure",
+        "required_gear": [
+          "backpack",
+          "boots",
+          "gaiters",
+          "headlamp",
+          "trekking_poles",
+          "warm_layer",
+          "water_bottle",
+          "waterproof_jacket"
+        ],
+        "proposal_round": 1
+      },
+      "text": "Proposal for day hike on 2026-11-22 at Vega de Ario.",
+      "ts": 45.423
+    },
+    {
+      "tick": 4,
+      "seq": 86,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "send_to_peer",
+      "call_id": "send_to_peer#2",
+      "ok": true,
+      "ts": 45.423
+    },
+    {
+      "tick": 4,
+      "seq": 87,
+      "actor": "agent_a",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 6,
+      "input_tokens": 11291,
+      "output_tokens": 177,
+      "latency_ms": 1614.7,
+      "tool_calls": [
+        "update_plan_draft",
+        "update_plan_draft",
+        "update_plan_draft"
+      ],
+      "compacted": 4,
+      "ts": 47.039
+    },
+    {
+      "tick": 4,
+      "seq": 88,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "update_plan_draft",
+      "call_id": "call_2685216519123933943",
+      "args": {
+        "key": "proposal_msg_id",
+        "value": "agent_a-2"
+      },
+      "ts": 47.0419
+    },
+    {
+      "tick": 4,
+      "seq": 89,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "update_plan_draft",
+      "call_id": "call_2685216519123933943",
+      "ok": true,
+      "ts": 47.0419
+    },
+    {
+      "tick": 4,
+      "seq": 90,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "update_plan_draft",
+      "call_id": "call_2685216519123934664",
+      "args": {
+        "key": "date",
+        "value": "2026-11-22"
+      },
+      "ts": 47.042
+    },
+    {
+      "tick": 4,
+      "seq": 91,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "update_plan_draft",
+      "call_id": "call_2685216519123934664",
+      "ok": true,
+      "ts": 47.042
+    },
+    {
+      "tick": 4,
+      "seq": 92,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "update_plan_draft",
+      "call_id": "call_2685216519123931289",
+      "args": {
+        "key": "trail_id",
+        "value": "vega-de-ario"
+      },
+      "ts": 47.0421
+    },
+    {
+      "tick": 4,
+      "seq": 93,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "update_plan_draft",
+      "call_id": "call_2685216519123931289",
+      "ok": true,
+      "ts": 47.0421
+    },
+    {
+      "tick": 4,
+      "seq": 94,
+      "actor": "agent_a",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 7,
+      "input_tokens": 11566,
+      "output_tokens": 40,
+      "latency_ms": 1308.0,
+      "tool_calls": [
+        "end_turn"
+      ],
+      "compacted": 4,
+      "ts": 48.3518
+    },
+    {
+      "tick": 4,
+      "seq": 95,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "end_turn",
+      "call_id": "end_turn#2",
+      "args": {
+        "reason": "Sent PROPOSAL agent_a-2 to agent_b and saved draft parameters. Waiting for response."
+      },
+      "ts": 48.354
+    },
+    {
+      "tick": 4,
+      "seq": 96,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "end_turn",
+      "call_id": "end_turn#2",
+      "ok": true,
+      "ts": 48.354
+    },
+    {
+      "tick": 4,
+      "seq": 97,
+      "actor": "agent_a",
+      "kind": "turn_end",
+      "reason": "end_turn",
+      "steps": 7,
+      "ts": 48.3558
+    },
+    {
+      "tick": 5,
+      "seq": 98,
+      "actor": "agent_b",
+      "kind": "turn_start",
+      "inbox": [
+        "agent_a-2"
+      ],
+      "ts": 48.3559
+    },
+    {
+      "tick": 5,
+      "seq": 99,
+      "actor": "agent_b",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 1,
+      "input_tokens": 4296,
+      "output_tokens": 606,
+      "latency_ms": 3447.8,
+      "tool_calls": [
+        "update_plan_draft",
+        "check_equipment"
+      ],
+      "compacted": 0,
+      "ts": 51.8053
+    },
+    {
+      "tick": 5,
+      "seq": 100,
+      "actor": "agent_b",
+      "kind": "tool_call",
+      "tool": "update_plan_draft",
+      "call_id": "call_17545806841352498847",
+      "args": {
+        "key": "proposal_msg_id",
+        "value": "agent_a-2"
+      },
+      "ts": 51.8076
+    },
+    {
+      "tick": 5,
+      "seq": 101,
+      "actor": "agent_b",
+      "kind": "tool_result",
+      "tool": "update_plan_draft",
+      "call_id": "call_17545806841352498847",
+      "ok": true,
+      "ts": 51.8076
+    },
+    {
+      "tick": 5,
+      "seq": 102,
+      "actor": "agent_b",
+      "kind": "tool_call",
+      "tool": "check_equipment",
+      "call_id": "check_equipment#1",
+      "args": {
+        "required_items": [
+          "backpack",
+          "boots",
+          "gaiters",
+          "headlamp",
+          "trekking_poles",
+          "warm_layer",
+          "water_bottle",
+          "waterproof_jacket"
+        ]
+      },
+      "ts": 51.8078
+    },
+    {
+      "tick": 5,
+      "seq": 103,
+      "actor": "agent_b",
+      "kind": "tool_result",
+      "tool": "check_equipment",
+      "call_id": "check_equipment#1",
+      "ok": true,
+      "ts": 51.8078
+    },
+    {
+      "tick": 5,
+      "seq": 104,
+      "actor": "agent_b",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 2,
+      "input_tokens": 4994,
+      "output_tokens": 290,
+      "latency_ms": 2234.0,
+      "tool_calls": [
+        "update_plan_draft",
+        "send_to_human"
+      ],
+      "compacted": 0,
+      "ts": 54.0431
+    },
+    {
+      "tick": 5,
+      "seq": 105,
+      "actor": "agent_b",
+      "kind": "tool_call",
+      "tool": "update_plan_draft",
+      "call_id": "call_2539337858627746108",
+      "args": {
+        "key": "missing",
+        "value": "gaiters,trekking_poles"
+      },
+      "ts": 54.0453
+    },
+    {
+      "tick": 5,
+      "seq": 106,
+      "actor": "agent_b",
+      "kind": "tool_result",
+      "tool": "update_plan_draft",
+      "call_id": "call_2539337858627746108",
+      "ok": true,
+      "ts": 54.0453
+    },
+    {
+      "tick": 5,
+      "seq": 107,
+      "actor": "agent_b",
+      "kind": "tool_call",
+      "tool": "send_to_human",
+      "call_id": "send_to_human#2",
+      "args": {
+        "text": "Alice's assistant proposed a day hike on 2026-11-22 at Vega de Ario. You're missing gaiters and trekking poles for this hike. Do you agree to rent gaiters and trekking poles for 2026-11-22?",
+        "kind": "question",
+        "plan_json": ""
+      },
+      "ts": 54.0454
+    },
+    {
+      "tick": 5,
+      "seq": 108,
+      "actor": "agent_b",
+      "kind": "message",
+      "from": "agent_b",
+      "to": "human_b",
+      "msg_id": "agent_b-3",
+      "message_kind": "question",
+      "text": "Alice's assistant proposed a day hike on 2026-11-22 at Vega de Ario. You're missing gaiters and trekking poles for this hike. Do you agree to rent gaiters and trekking poles for 2026-11-22?",
+      "ts": 54.0455
+    },
+    {
+      "tick": 5,
+      "seq": 109,
+      "actor": "agent_b",
+      "kind": "tool_result",
+      "tool": "send_to_human",
+      "call_id": "send_to_human#2",
+      "ok": true,
+      "ts": 54.0455
+    },
+    {
+      "tick": 5,
+      "seq": 110,
+      "actor": "agent_b",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 3,
+      "input_tokens": 5347,
+      "output_tokens": 57,
+      "latency_ms": 1251.0,
+      "tool_calls": [
+        "end_turn"
+      ],
+      "compacted": 0,
+      "ts": 55.298
+    },
+    {
+      "tick": 5,
+      "seq": 111,
+      "actor": "agent_b",
+      "kind": "tool_call",
+      "tool": "end_turn",
+      "call_id": "end_turn#4",
+      "args": {
+        "reason": "Asked Bob if he agrees to rent missing gear (gaiters, trekking poles) for 2026-11-22 at Vega de Ario."
+      },
+      "ts": 55.2999
+    },
+    {
+      "tick": 5,
+      "seq": 112,
+      "actor": "agent_b",
+      "kind": "tool_result",
+      "tool": "end_turn",
+      "call_id": "end_turn#4",
+      "ok": true,
+      "ts": 55.2999
+    },
+    {
+      "tick": 5,
+      "seq": 113,
+      "actor": "agent_b",
+      "kind": "turn_end",
+      "reason": "end_turn",
+      "steps": 3,
+      "ts": 55.3015
+    },
+    {
+      "tick": 6,
+      "seq": 114,
+      "actor": "human_b",
+      "kind": "turn_start",
+      "inbox": [
+        "agent_b-3"
+      ],
+      "ts": 55.3016
+    },
+    {
+      "tick": 6,
+      "seq": 115,
+      "actor": "human_b",
+      "kind": "llm_call",
+      "model": "gemini-3.5-flash-lite",
+      "input_tokens": 470,
+      "output_tokens": 24,
+      "latency_ms": 694.3,
+      "ts": 55.9959
+    },
+    {
+      "tick": 6,
+      "seq": 116,
+      "actor": "human_b",
+      "kind": "message",
+      "from": "human_b",
+      "to": "agent_b",
+      "msg_id": "human_b-3",
+      "message_kind": "info",
+      "text": "Yes, I agree to rent the missing gear.",
+      "ts": 55.996
+    },
+    {
+      "tick": 6,
+      "seq": 117,
+      "actor": "human_b",
+      "kind": "turn_end",
+      "reason": "reply",
+      "accepts_final_plan": null,
+      "ts": 55.996
+    },
+    {
+      "tick": 7,
+      "seq": 118,
+      "actor": "agent_b",
+      "kind": "turn_start",
+      "inbox": [
+        "human_b-3"
+      ],
+      "ts": 55.9961
+    },
+    {
+      "tick": 7,
+      "seq": 119,
+      "actor": "agent_b",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 1,
+      "input_tokens": 5493,
+      "output_tokens": 329,
+      "latency_ms": 2303.6,
+      "tool_calls": [
+        "rent_equipment"
+      ],
+      "compacted": 0,
+      "ts": 58.3021
+    },
+    {
+      "tick": 7,
+      "seq": 120,
+      "actor": "agent_b",
+      "kind": "tool_call",
+      "tool": "rent_equipment",
+      "call_id": "call_17459570179411202974",
+      "args": {
+        "items": [
+          "gaiters",
+          "trekking_poles"
+        ],
+        "idempotency_key": "rent-agent_a-2",
+        "date": "2026-11-22"
+      },
+      "server": "gear",
+      "ts": 58.304
+    },
+    {
+      "tick": 7,
+      "seq": 121,
+      "actor": "agent_b",
+      "kind": "tool_result",
+      "tool": "rent_equipment",
+      "call_id": "call_17459570179411202974",
+      "ok": true,
+      "error": null,
+      "attempt": 1,
+      "fault": "ok",
+      "latency_ms": 7,
+      "ts": 58.3106
+    },
+    {
+      "tick": 7,
+      "seq": 122,
+      "actor": "agent_b",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 2,
+      "input_tokens": 5953,
+      "output_tokens": 312,
+      "latency_ms": 2295.4,
+      "tool_calls": [
+        "update_plan_draft",
+        "send_to_peer"
+      ],
+      "compacted": 0,
+      "ts": 60.6075
+    },
+    {
+      "tick": 7,
+      "seq": 123,
+      "actor": "agent_b",
+      "kind": "tool_call",
+      "tool": "update_plan_draft",
+      "call_id": "call_11672795607113447211",
+      "args": {
+        "key": "rental_id",
+        "value": "RNT-0001"
+      },
+      "ts": 60.6099
+    },
+    {
+      "tick": 7,
+      "seq": 124,
+      "actor": "agent_b",
+      "kind": "tool_result",
+      "tool": "update_plan_draft",
+      "call_id": "call_11672795607113447211",
+      "ok": true,
+      "ts": 60.6099
+    },
+    {
+      "tick": 7,
+      "seq": 125,
+      "actor": "agent_b",
+      "kind": "tool_call",
+      "tool": "send_to_peer",
+      "call_id": "send_to_peer#2",
+      "args": {
+        "performative": "ACCEPT",
+        "payload_json": "{\"proposal_msg_id\": \"agent_a-2\", \"rented_items\": [\"gaiters\", \"trekking_poles\"], \"rental_confirmation_id\": \"RNT-0001\"}",
+        "text": "Bob accepts the proposal for Vega de Ario on 2026-11-22 and gear rental is confirmed.",
+        "in_reply_to": "agent_a-2"
+      },
+      "ts": 60.61
+    },
+    {
+      "tick": 7,
+      "seq": 126,
+      "actor": "agent_b",
+      "kind": "message",
+      "from": "agent_b",
+      "to": "agent_a",
+      "msg_id": "agent_b-4",
+      "performative": "ACCEPT",
+      "conversation_id": "picos-joint-day-hike-seed5",
+      "in_reply_to": "agent_a-2",
+      "payload": {
+        "proposal_msg_id": "agent_a-2",
+        "rented_items": [
+          "gaiters",
+          "trekking_poles"
+        ],
+        "rental_confirmation_id": "RNT-0001"
+      },
+      "text": "Bob accepts the proposal for Vega de Ario on 2026-11-22 and gear rental is confirmed.",
+      "ts": 60.6101
+    },
+    {
+      "tick": 7,
+      "seq": 127,
+      "actor": "agent_b",
+      "kind": "tool_result",
+      "tool": "send_to_peer",
+      "call_id": "send_to_peer#2",
+      "ok": true,
+      "ts": 60.6101
+    },
+    {
+      "tick": 7,
+      "seq": 128,
+      "actor": "agent_b",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 3,
+      "input_tokens": 6332,
+      "output_tokens": 36,
+      "latency_ms": 959.7,
+      "tool_calls": [
+        "end_turn"
+      ],
+      "compacted": 0,
+      "ts": 61.5712
+    },
+    {
+      "tick": 7,
+      "seq": 129,
+      "actor": "agent_b",
+      "kind": "tool_call",
+      "tool": "end_turn",
+      "call_id": "end_turn#5",
+      "args": {
+        "reason": "Rented missing gear and sent ACCEPT performative to agent_a."
+      },
+      "ts": 61.5731
+    },
+    {
+      "tick": 7,
+      "seq": 130,
+      "actor": "agent_b",
+      "kind": "tool_result",
+      "tool": "end_turn",
+      "call_id": "end_turn#5",
+      "ok": true,
+      "ts": 61.5731
+    },
+    {
+      "tick": 7,
+      "seq": 131,
+      "actor": "agent_b",
+      "kind": "turn_end",
+      "reason": "end_turn",
+      "steps": 3,
+      "ts": 61.5748
+    },
+    {
+      "tick": 8,
+      "seq": 132,
+      "actor": "agent_a",
+      "kind": "turn_start",
+      "inbox": [
+        "agent_b-4"
+      ],
+      "ts": 61.5749
+    },
+    {
+      "tick": 8,
+      "seq": 133,
+      "actor": "agent_a",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 1,
+      "input_tokens": 11778,
+      "output_tokens": 487,
+      "latency_ms": 2882.3,
+      "tool_calls": [
+        "check_equipment",
+        "book_trip"
+      ],
+      "compacted": 4,
+      "ts": 64.4593
+    },
+    {
+      "tick": 8,
+      "seq": 134,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "check_equipment",
+      "call_id": "check_equipment#1",
+      "args": {
+        "required_items": [
+          "backpack",
+          "boots",
+          "gaiters",
+          "headlamp",
+          "trekking_poles",
+          "warm_layer",
+          "water_bottle",
+          "waterproof_jacket"
+        ]
+      },
+      "ts": 64.4619
+    },
+    {
+      "tick": 8,
+      "seq": 135,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "check_equipment",
+      "call_id": "check_equipment#1",
+      "ok": true,
+      "ts": 64.4619
+    },
+    {
+      "tick": 8,
+      "seq": 136,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "book_trip",
+      "call_id": "call_9495284471728948034",
+      "args": {
+        "trail_id": "vega-de-ario",
+        "party_size": 2,
+        "idempotency_key": "book-agent_a-2",
+        "date": "2026-11-22"
+      },
+      "server": "trails",
+      "ts": 64.462
+    },
+    {
+      "tick": 8,
+      "seq": 137,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "book_trip",
+      "call_id": "call_9495284471728948034",
+      "ok": false,
+      "error": "TransientError: 503 Service Unavailable (injected)",
+      "attempt": 1,
+      "fault": "error",
+      "latency_ms": 0,
+      "ts": 64.4621
+    },
+    {
+      "tick": 8,
+      "seq": 138,
+      "actor": "agent_a",
+      "kind": "retry",
+      "tool": "book_trip",
+      "call_id": "call_9495284471728948034",
+      "attempt": 1,
+      "next_attempt": 2,
+      "wait_s": 0.2,
+      "error": "TransientToolError: TransientError: 503 Service Unavailable (injected)",
+      "ts": 64.4622
+    },
+    {
+      "tick": 8,
+      "seq": 139,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "book_trip",
+      "call_id": "call_9495284471728948034",
+      "ok": false,
+      "error": "Timeout: no response within 5.0s (injected; the request may have been processed)",
+      "attempt": 2,
+      "fault": "timeout",
+      "latency_ms": 6,
+      "ts": 64.6737
+    },
+    {
+      "tick": 8,
+      "seq": 140,
+      "actor": "agent_a",
+      "kind": "retry",
+      "tool": "book_trip",
+      "call_id": "call_9495284471728948034",
+      "attempt": 2,
+      "next_attempt": 3,
+      "wait_s": 0.4,
+      "error": "TransientToolError: Timeout: no response within 5.0s (injected; the request may have been processed)",
+      "ts": 64.6738
+    },
+    {
+      "tick": 8,
+      "seq": 141,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "book_trip",
+      "call_id": "call_9495284471728948034",
+      "ok": true,
+      "error": null,
+      "attempt": 3,
+      "fault": "ok",
+      "latency_ms": 5,
+      "ts": 65.0904
+    },
+    {
+      "tick": 8,
+      "seq": 142,
+      "actor": "agent_a",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 2,
+      "input_tokens": 12452,
+      "output_tokens": 413,
+      "latency_ms": 3033.9,
+      "tool_calls": [
+        "get_trail"
+      ],
+      "compacted": 4,
+      "ts": 68.1262
+    },
+    {
+      "tick": 8,
+      "seq": 143,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "get_trail",
+      "call_id": "call_1901033966401510363",
+      "args": {
+        "trail_id": "vega-de-ario"
+      },
+      "server": "trails",
+      "ts": 68.1284
+    },
+    {
+      "tick": 8,
+      "seq": 144,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "get_trail",
+      "call_id": "call_1901033966401510363",
+      "ok": true,
+      "error": null,
+      "attempt": 1,
+      "fault": "ok",
+      "latency_ms": 4,
+      "ts": 68.132
+    },
+    {
+      "tick": 8,
+      "seq": 145,
+      "actor": "agent_a",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 3,
+      "input_tokens": 13155,
+      "output_tokens": 141,
+      "latency_ms": 1751.1,
+      "tool_calls": [
+        "get_forecast"
+      ],
+      "compacted": 4,
+      "ts": 69.8847
+    },
+    {
+      "tick": 8,
+      "seq": 146,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "get_forecast",
+      "call_id": "call_6092738578708843287",
+      "args": {
+        "start_date": "2026-11-22",
+        "end_date": "2026-11-22",
+        "location_id": "western_massif"
+      },
+      "server": "weather",
+      "ts": 69.8868
+    },
+    {
+      "tick": 8,
+      "seq": 147,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "get_forecast",
+      "call_id": "call_6092738578708843287",
+      "ok": true,
+      "error": null,
+      "attempt": 1,
+      "fault": "ok",
+      "latency_ms": 4,
+      "ts": 69.8906
+    },
+    {
+      "tick": 8,
+      "seq": 148,
+      "actor": "agent_a",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 4,
+      "input_tokens": 13519,
+      "output_tokens": 1378,
+      "latency_ms": 7617.5,
+      "tool_calls": [
+        "send_to_human"
+      ],
+      "compacted": 4,
+      "ts": 77.5098
+    },
+    {
+      "tick": 8,
+      "seq": 149,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "send_to_human",
+      "call_id": "send_to_human#1",
+      "args": {
+        "text": "Great news! Your hike with Bob has been booked for Sunday, November 22, 2026, on the Vega de Ario trail (Booking ID: BKG-0001). Please note that you need to acquire/bring a headlamp for the trip!",
+        "kind": "final_plan",
+        "plan_json": "{\"booking_id\":\"BKG-0001\",\"date\":\"2026-11-22\",\"participants\":[{\"has\":[\"backpack\",\"boots\",\"gaiters\",\"trekking_poles\",\"warm_layer\",\"water_bottle\",\"waterproof_jacket\"],\"must_bring\":[\"headlamp\"],\"participant\":\"Alice\",\"rented\":[]},{\"has\":[\"backpack\",\"boots\",\"headlamp\",\"warm_layer\",\"water_bottle\",\"waterproof_jacket\"],\"must_bring\":[],\"participant\":\"Bob\",\"rented\":[\"gaiters\",\"trekking_poles\"]}],\"safety_notes\":[\"November daylight is short (approx. 9.2 hours); start early to complete the 5-hour hike before dusk.\",\"Cold temperatures (min -2°C) may lead to frozen or muddy sections; maintain a steady pace on descents to protect your knee.\"],\"trail_id\":\"vega-de-ario\",\"trail_name\":\"Vega de Ario (PR-PNPE 4) from Lago de la Ercina\",\"weather_summary\":\"Partly clear with temperatures between -2°C and 7°C, wind up to 20 km/h, and minimal precipitation.\"}"
+      },
+      "ts": 77.5122
+    },
+    {
+      "tick": 8,
+      "seq": 150,
+      "actor": "agent_a",
+      "kind": "message",
+      "from": "agent_a",
+      "to": "human_a",
+      "msg_id": "agent_a-3",
+      "message_kind": "final_plan",
+      "text": "Great news! Your hike with Bob has been booked for Sunday, November 22, 2026, on the Vega de Ario trail (Booking ID: BKG-0001). Please note that you need to acquire/bring a headlamp for the trip!",
+      "final_plan": {
+        "date": "2026-11-22",
+        "trail_id": "vega-de-ario",
+        "trail_name": "Vega de Ario (PR-PNPE 4) from Lago de la Ercina",
+        "booking_id": "BKG-0001",
+        "weather_summary": "Partly clear with temperatures between -2°C and 7°C, wind up to 20 km/h, and minimal precipitation.",
+        "participants": [
+          {
+            "participant": "Alice",
+            "has": [
+              "backpack",
+              "boots",
+              "gaiters",
+              "trekking_poles",
+              "warm_layer",
+              "water_bottle",
+              "waterproof_jacket"
+            ],
+            "rented": [],
+            "must_bring": [
+              "headlamp"
+            ]
+          },
+          {
+            "participant": "Bob",
+            "has": [
+              "backpack",
+              "boots",
+              "headlamp",
+              "warm_layer",
+              "water_bottle",
+              "waterproof_jacket"
+            ],
+            "rented": [
+              "gaiters",
+              "trekking_poles"
+            ],
+            "must_bring": []
+          }
+        ],
+        "safety_notes": [
+          "November daylight is short (approx. 9.2 hours); start early to complete the 5-hour hike before dusk.",
+          "Cold temperatures (min -2°C) may lead to frozen or muddy sections; maintain a steady pace on descents to protect your knee."
+        ]
+      },
+      "ts": 77.5123
+    },
+    {
+      "tick": 8,
+      "seq": 151,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "send_to_human",
+      "call_id": "send_to_human#1",
+      "ok": true,
+      "ts": 77.5123
+    },
+    {
+      "tick": 8,
+      "seq": 152,
+      "actor": "agent_a",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 5,
+      "input_tokens": 14931,
+      "output_tokens": 49,
+      "latency_ms": 1365.9,
+      "tool_calls": [
+        "update_plan_draft"
+      ],
+      "compacted": 4,
+      "ts": 78.8798
+    },
+    {
+      "tick": 8,
+      "seq": 153,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "update_plan_draft",
+      "call_id": "call_9342200379363119547",
+      "args": {
+        "key": "booking_id",
+        "value": "BKG-0001"
+      },
+      "ts": 78.8822
+    },
+    {
+      "tick": 8,
+      "seq": 154,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "update_plan_draft",
+      "call_id": "call_9342200379363119547",
+      "ok": true,
+      "ts": 78.8822
+    },
+    {
+      "tick": 8,
+      "seq": 155,
+      "actor": "agent_a",
+      "kind": "llm_call",
+      "model": "gemini-3.6-flash",
+      "step": 6,
+      "input_tokens": 15015,
+      "output_tokens": 32,
+      "latency_ms": 1959.3,
+      "tool_calls": [
+        "end_turn"
+      ],
+      "compacted": 4,
+      "ts": 80.8433
+    },
+    {
+      "tick": 8,
+      "seq": 156,
+      "actor": "agent_a",
+      "kind": "tool_call",
+      "tool": "end_turn",
+      "call_id": "end_turn#3",
+      "args": {
+        "reason": "Final plan confirmed and sent to Alice."
+      },
+      "ts": 80.8457
+    },
+    {
+      "tick": 8,
+      "seq": 157,
+      "actor": "agent_a",
+      "kind": "tool_result",
+      "tool": "end_turn",
+      "call_id": "end_turn#3",
+      "ok": true,
+      "ts": 80.8457
+    },
+    {
+      "tick": 8,
+      "seq": 158,
+      "actor": "agent_a",
+      "kind": "turn_end",
+      "reason": "end_turn",
+      "steps": 6,
+      "ts": 80.8476
+    },
+    {
+      "tick": 9,
+      "seq": 159,
+      "actor": "human_a",
+      "kind": "turn_start",
+      "inbox": [
+        "agent_a-3"
+      ],
+      "ts": 80.8477
+    },
+    {
+      "tick": 9,
+      "seq": 160,
+      "actor": "human_a",
+      "kind": "llm_call",
+      "model": "gemini-3.5-flash-lite",
+      "input_tokens": 642,
+      "output_tokens": 37,
+      "latency_ms": 872.2,
+      "ts": 81.72
+    },
+    {
+      "tick": 9,
+      "seq": 161,
+      "actor": "human_a",
+      "kind": "message",
+      "from": "human_a",
+      "to": "agent_a",
+      "msg_id": "human_a-2",
+      "message_kind": "info",
+      "text": "This plan looks wonderful, thanks so much! I will definitely bring my headlamp.",
+      "ts": 81.72
+    },
+    {
+      "tick": 9,
+      "seq": 162,
+      "actor": "human_a",
+      "kind": "turn_end",
+      "reason": "reply",
+      "accepts_final_plan": true,
+      "ts": 81.72
+    }
+  ],
+  "termination": {
+    "reason": "success",
+    "tick": 9
+  },
+  "outcome": {
+    "final_plan_delivered": true,
+    "bookings": 1,
+    "rentals": 1,
+    "rented_items": [
+      "gaiters",
+      "trekking_poles"
+    ],
+    "date": "2026-11-22",
+    "trail_id": "vega-de-ario",
+    "booking_id": "BKG-0001",
+    "booking_confirmed": true,
+    "must_bring": {
+      "human_a": [
+        "headlamp"
+      ],
+      "human_b": []
+    },
+    "matches_expected": true
+  },
+  "metrics": {
+    "termination_reason": "success",
+    "ticks": 9,
+    "success": true,
+    "outcome_matches_expected": true,
+    "duration_s": 81.72,
+    "llm": {
+      "per_actor": {
+        "agent_a": {
+          "calls": 16,
+          "input_tokens": 177637,
+          "output_tokens": 7733,
+          "cost_usd": 0.324453
+        },
+        "agent_b": {
+          "calls": 13,
+          "input_tokens": 54355,
+          "output_tokens": 2756,
+          "cost_usd": 0.102202
+        },
+        "human_a": {
+          "calls": 1,
+          "input_tokens": 642,
+          "output_tokens": 37,
+          "cost_usd": 0.000285
+        },
+        "human_b": {
+          "calls": 2,
+          "input_tokens": 841,
+          "output_tokens": 72,
+          "cost_usd": 0.000432
+        }
+      },
+      "calls": 32,
+      "input_tokens": 233475,
+      "output_tokens": 10598,
+      "cost_usd": 0.427372,
+      "unpriced_models": [],
+      "latency_ms": {
+        "mean": 2435.0,
+        "p50_ms": 1763.8,
+        "max_ms": 12666.5
+      }
+    },
+    "tools": {
+      "per_tool": {
+        "book_trip": {
+          "calls": 1,
+          "attempts": 3,
+          "errors": 2,
+          "injected_faults": 2,
+          "p50_ms": 5,
+          "max_ms": 6
+        },
+        "build_constraints": {
+          "calls": 2,
+          "attempts": 2,
+          "errors": 0,
+          "injected_faults": 0,
+          "p50_ms": null,
+          "max_ms": null
+        },
+        "check_equipment": {
+          "calls": 2,
+          "attempts": 2,
+          "errors": 0,
+          "injected_faults": 0,
+          "p50_ms": null,
+          "max_ms": null
+        },
+        "end_turn": {
+          "calls": 8,
+          "attempts": 8,
+          "errors": 0,
+          "injected_faults": 0,
+          "p50_ms": null,
+          "max_ms": null
+        },
+        "get_calendar": {
+          "calls": 2,
+          "attempts": 2,
+          "errors": 0,
+          "injected_faults": 0,
+          "p50_ms": null,
+          "max_ms": null
+        },
+        "get_forecast": {
+          "calls": 4,
+          "attempts": 4,
+          "errors": 0,
+          "injected_faults": 0,
+          "p50_ms": 6.5,
+          "max_ms": 9
+        },
+        "get_trail": {
+          "calls": 1,
+          "attempts": 1,
+          "errors": 0,
+          "injected_faults": 0,
+          "p50_ms": 4,
+          "max_ms": 4
+        },
+        "get_user_profile": {
+          "calls": 2,
+          "attempts": 2,
+          "errors": 0,
+          "injected_faults": 0,
+          "p50_ms": null,
+          "max_ms": null
+        },
+        "list_locations": {
+          "calls": 1,
+          "attempts": 1,
+          "errors": 0,
+          "injected_faults": 0,
+          "p50_ms": 6,
+          "max_ms": 6
+        },
+        "merge_constraints": {
+          "calls": 1,
+          "attempts": 1,
+          "errors": 0,
+          "injected_faults": 0,
+          "p50_ms": null,
+          "max_ms": null
+        },
+        "rank_dates": {
+          "calls": 1,
+          "attempts": 1,
+          "errors": 0,
+          "injected_faults": 0,
+          "p50_ms": null,
+          "max_ms": null
+        },
+        "rank_trails": {
+          "calls": 1,
+          "attempts": 1,
+          "errors": 0,
+          "injected_faults": 0,
+          "p50_ms": null,
+          "max_ms": null
+        },
+        "rent_equipment": {
+          "calls": 1,
+          "attempts": 1,
+          "errors": 0,
+          "injected_faults": 0,
+          "p50_ms": 7,
+          "max_ms": 7
+        },
+        "required_gear": {
+          "calls": 1,
+          "attempts": 2,
+          "errors": 1,
+          "injected_faults": 1,
+          "p50_ms": 6.5,
+          "max_ms": 13
+        },
+        "search_trails": {
+          "calls": 1,
+          "attempts": 2,
+          "errors": 1,
+          "injected_faults": 1,
+          "p50_ms": 2.5,
+          "max_ms": 5
+        },
+        "send_to_human": {
+          "calls": 3,
+          "attempts": 3,
+          "errors": 0,
+          "injected_faults": 0,
+          "p50_ms": null,
+          "max_ms": null
+        },
+        "send_to_peer": {
+          "calls": 4,
+          "attempts": 4,
+          "errors": 0,
+          "injected_faults": 0,
+          "p50_ms": null,
+          "max_ms": null
+        },
+        "update_plan_draft": {
+          "calls": 8,
+          "attempts": 8,
+          "errors": 0,
+          "injected_faults": 0,
+          "p50_ms": null,
+          "max_ms": null
+        }
+      },
+      "attempts": 48,
+      "errors": 4,
+      "injected_faults": 4,
+      "error_rate": 0.0833
+    },
+    "retries": {
+      "tool": 4,
+      "llm": 0
+    },
+    "messages_per_edge": {
+      "agent_a->agent_b": 2,
+      "agent_a->human_a": 1,
+      "agent_b->agent_a": 2,
+      "agent_b->human_b": 2,
+      "human_a->agent_a": 2,
+      "human_b->agent_b": 3
+    },
+    "violations": {
+      "total": 0,
+      "by_rule": {}
+    },
+    "budget_exhaustions": 0
+  }
+}

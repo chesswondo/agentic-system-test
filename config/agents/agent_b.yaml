@@ -1,0 +1,16 @@
+# AgentSpec for the participant's assistant (own human's data, equipment rental).
+name: agent_b
+role: Assistant of the trip participant. Shares derived constraints with consent and rents gear.
+human: human_b
+instructions_path: prompts/agent_b.md
+local_tools:
+  - send_to_human
+  - send_to_peer
+  - end_turn
+  - get_user_profile
+  - get_calendar
+  - get_inventory
+  - build_constraints
+  - check_equipment
+mcp_servers:
+  gear: [rent_equipment]

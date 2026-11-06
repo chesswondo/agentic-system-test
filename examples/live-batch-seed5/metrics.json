@@ -1,0 +1,214 @@
+{
+  "termination_reason": "success",
+  "ticks": 9,
+  "success": true,
+  "outcome_matches_expected": true,
+  "duration_s": 81.72,
+  "llm": {
+    "per_actor": {
+      "agent_a": {
+        "calls": 16,
+        "input_tokens": 177637,
+        "output_tokens": 7733,
+        "cost_usd": 0.324453
+      },
+      "agent_b": {
+        "calls": 13,
+        "input_tokens": 54355,
+        "output_tokens": 2756,
+        "cost_usd": 0.102202
+      },
+      "human_a": {
+        "calls": 1,
+        "input_tokens": 642,
+        "output_tokens": 37,
+        "cost_usd": 0.000285
+      },
+      "human_b": {
+        "calls": 2,
+        "input_tokens": 841,
+        "output_tokens": 72,
+        "cost_usd": 0.000432
+      }
+    },
+    "calls": 32,
+    "input_tokens": 233475,
+    "output_tokens": 10598,
+    "cost_usd": 0.427372,
+    "unpriced_models": [],
+    "latency_ms": {
+      "mean": 2435.0,
+      "p50_ms": 1763.8,
+      "max_ms": 12666.5
+    }
+  },
+  "tools": {
+    "per_tool": {
+      "book_trip": {
+        "calls": 1,
+        "attempts": 3,
+        "errors": 2,
+        "injected_faults": 2,
+        "p50_ms": 5,
+        "max_ms": 6
+      },
+      "build_constraints": {
+        "calls": 2,
+        "attempts": 2,
+        "errors": 0,
+        "injected_faults": 0,
+        "p50_ms": null,
+        "max_ms": null
+      },
+      "check_equipment": {
+        "calls": 2,
+        "attempts": 2,
+        "errors": 0,
+        "injected_faults": 0,
+        "p50_ms": null,
+        "max_ms": null
+      },
+      "end_turn": {
+        "calls": 8,
+        "attempts": 8,
+        "errors": 0,
+        "injected_faults": 0,
+        "p50_ms": null,
+        "max_ms": null
+      },
+      "get_calendar": {
+        "calls": 2,
+        "attempts": 2,
+        "errors": 0,
+        "injected_faults": 0,
+        "p50_ms": null,
+        "max_ms": null
+      },
+      "get_forecast": {
+        "calls": 4,
+        "attempts": 4,
+        "errors": 0,
+        "injected_faults": 0,
+        "p50_ms": 6.5,
+        "max_ms": 9
+      },
+      "get_trail": {
+        "calls": 1,
+        "attempts": 1,
+        "errors": 0,
+        "injected_faults": 0,
+        "p50_ms": 4,
+        "max_ms": 4
+      },
+      "get_user_profile": {
+        "calls": 2,
+        "attempts": 2,
+        "errors": 0,
+        "injected_faults": 0,
+        "p50_ms": null,
+        "max_ms": null
+      },
+      "list_locations": {
+        "calls": 1,
+        "attempts": 1,
+        "errors": 0,
+        "injected_faults": 0,
+        "p50_ms": 6,
+        "max_ms": 6
+      },
+      "merge_constraints": {
+        "calls": 1,
+        "attempts": 1,
+        "errors": 0,
+        "injected_faults": 0,
+        "p50_ms": null,
+        "max_ms": null
+      },
+      "rank_dates": {
+        "calls": 1,
+        "attempts": 1,
+        "errors": 0,
+        "injected_faults": 0,
+        "p50_ms": null,
+        "max_ms": null
+      },
+      "rank_trails": {
+        "calls": 1,
+        "attempts": 1,
+        "errors": 0,
+        "injected_faults": 0,
+        "p50_ms": null,
+        "max_ms": null
+      },
+      "rent_equipment": {
+        "calls": 1,
+        "attempts": 1,
+        "errors": 0,
+        "injected_faults": 0,
+        "p50_ms": 7,
+        "max_ms": 7
+      },
+      "required_gear": {
+        "calls": 1,
+        "attempts": 2,
+        "errors": 1,
+        "injected_faults": 1,
+        "p50_ms": 6.5,
+        "max_ms": 13
+      },
+      "search_trails": {
+        "calls": 1,
+        "attempts": 2,
+        "errors": 1,
+        "injected_faults": 1,
+        "p50_ms": 2.5,
+        "max_ms": 5
+      },
+      "send_to_human": {
+        "calls": 3,
+        "attempts": 3,
+        "errors": 0,
+        "injected_faults": 0,
+        "p50_ms": null,
+        "max_ms": null
+      },
+      "send_to_peer": {
+        "calls": 4,
+        "attempts": 4,
+        "errors": 0,
+        "injected_faults": 0,
+        "p50_ms": null,
+        "max_ms": null
+      },
+      "update_plan_draft": {
+        "calls": 8,
+        "attempts": 8,
+        "errors": 0,
+        "injected_faults": 0,
+        "p50_ms": null,
+        "max_ms": null
+      }
+    },
+    "attempts": 48,
+    "errors": 4,
+    "injected_faults": 4,
+    "error_rate": 0.0833
+  },
+  "retries": {
+    "tool": 4,
+    "llm": 0
+  },
+  "messages_per_edge": {
+    "agent_a->agent_b": 2,
+    "agent_a->human_a": 1,
+    "agent_b->agent_a": 2,
+    "agent_b->human_b": 2,
+    "human_a->agent_a": 2,
+    "human_b->agent_b": 3
+  },
+  "violations": {
+    "total": 0,
+    "by_rule": {}
+  },
+  "budget_exhaustions": 0
+}

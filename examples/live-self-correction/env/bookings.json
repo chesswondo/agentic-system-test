@@ -1,0 +1,16 @@
+{
+  "book-agent_a-2": {
+    "record": {
+      "booking_id": "BKG-0001",
+      "date": "2026-11-22",
+      "party_size": 2,
+      "status": "confirmed",
+      "trail_id": "vega-de-ario"
+    },
+    "request": {
+      "date": "2026-11-22",
+      "party_size": 2,
+      "trail_id": "vega-de-ario"
+    }
+  }
+}

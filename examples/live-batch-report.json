@@ -1,0 +1,153 @@
+{
+  "batch_id": "batch_m6-live-gemini",
+  "scenario": "scenarios/default.yaml",
+  "provider": "google_genai",
+  "humans": "llm",
+  "seeds": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "summary": {
+    "runs": 5,
+    "success_rate": 1.0,
+    "golden_rate": 1.0,
+    "convergence_rate": 1.0,
+    "modal_outcome": {
+      "bookings": 1,
+      "date": "2026-11-22",
+      "must_bring": {
+        "human_a": [
+          "headlamp"
+        ],
+        "human_b": []
+      },
+      "rentals": 1,
+      "rented_items": [
+        "gaiters",
+        "trekking_poles"
+      ],
+      "trail_id": "vega-de-ario"
+    },
+    "modal_outcome_is_golden": true,
+    "distinct_outcomes": 1,
+    "terminations": {
+      "success": 5
+    },
+    "cost_usd": {
+      "mean": 0.3396,
+      "max": 0.427372,
+      "total": 1.69801
+    },
+    "unpriced_models": [],
+    "ticks_mean": 9.0,
+    "duration_s_mean": 70.5257,
+    "llm_latency_mean_ms": 2454.46,
+    "llm_calls_mean": 27.6,
+    "input_tokens_mean": 178826.0
+  },
+  "runs": [
+    {
+      "run_id": "batch_m6-live-gemini_seed1",
+      "seed": 1,
+      "termination": "success",
+      "ticks": 9,
+      "success": true,
+      "matches_expected": true,
+      "outcome_signature": "{\"bookings\": 1, \"date\": \"2026-11-22\", \"must_bring\": {\"human_a\": [\"headlamp\"], \"human_b\": []}, \"rentals\": 1, \"rented_items\": [\"gaiters\", \"trekking_poles\"], \"trail_id\": \"vega-de-ario\"}",
+      "llm_calls": 28,
+      "input_tokens": 170842,
+      "output_tokens": 10192,
+      "cost_usd": 0.330193,
+      "unpriced_models": [],
+      "duration_s": 71.0355,
+      "llm_latency_mean_ms": 2425.6,
+      "tool_error_rate": 0.0625,
+      "retries": 3,
+      "violations": 0,
+      "budget_exhaustions": 0
+    },
+    {
+      "run_id": "batch_m6-live-gemini_seed2",
+      "seed": 2,
+      "termination": "success",
+      "ticks": 9,
+      "success": true,
+      "matches_expected": true,
+      "outcome_signature": "{\"bookings\": 1, \"date\": \"2026-11-22\", \"must_bring\": {\"human_a\": [\"headlamp\"], \"human_b\": []}, \"rentals\": 1, \"rented_items\": [\"gaiters\", \"trekking_poles\"], \"trail_id\": \"vega-de-ario\"}",
+      "llm_calls": 30,
+      "input_tokens": 194661,
+      "output_tokens": 9250,
+      "cost_usd": 0.359012,
+      "unpriced_models": [],
+      "duration_s": 69.2009,
+      "llm_latency_mean_ms": 2205.1,
+      "tool_error_rate": 0.0417,
+      "retries": 2,
+      "violations": 0,
+      "budget_exhaustions": 0
+    },
+    {
+      "run_id": "batch_m6-live-gemini_seed3",
+      "seed": 3,
+      "termination": "success",
+      "ticks": 9,
+      "success": true,
+      "matches_expected": true,
+      "outcome_signature": "{\"bookings\": 1, \"date\": \"2026-11-22\", \"must_bring\": {\"human_a\": [\"headlamp\"], \"human_b\": []}, \"rentals\": 1, \"rented_items\": [\"gaiters\", \"trekking_poles\"], \"trail_id\": \"vega-de-ario\"}",
+      "llm_calls": 23,
+      "input_tokens": 140658,
+      "output_tokens": 9964,
+      "cost_usd": 0.283294,
+      "unpriced_models": [],
+      "duration_s": 66.8278,
+      "llm_latency_mean_ms": 2777.4,
+      "tool_error_rate": 0.0227,
+      "retries": 1,
+      "violations": 0,
+      "budget_exhaustions": 0
+    },
+    {
+      "run_id": "batch_m6-live-gemini_seed4",
+      "seed": 4,
+      "termination": "success",
+      "ticks": 9,
+      "success": true,
+      "matches_expected": true,
+      "outcome_signature": "{\"bookings\": 1, \"date\": \"2026-11-22\", \"must_bring\": {\"human_a\": [\"headlamp\"], \"human_b\": []}, \"rentals\": 1, \"rented_items\": [\"gaiters\", \"trekking_poles\"], \"trail_id\": \"vega-de-ario\"}",
+      "llm_calls": 25,
+      "input_tokens": 154494,
+      "output_tokens": 9175,
+      "cost_usd": 0.298139,
+      "unpriced_models": [],
+      "duration_s": 63.8443,
+      "llm_latency_mean_ms": 2429.2,
+      "tool_error_rate": 0.0408,
+      "retries": 2,
+      "violations": 0,
+      "budget_exhaustions": 0
+    },
+    {
+      "run_id": "batch_m6-live-gemini_seed5",
+      "seed": 5,
+      "termination": "success",
+      "ticks": 9,
+      "success": true,
+      "matches_expected": true,
+      "outcome_signature": "{\"bookings\": 1, \"date\": \"2026-11-22\", \"must_bring\": {\"human_a\": [\"headlamp\"], \"human_b\": []}, \"rentals\": 1, \"rented_items\": [\"gaiters\", \"trekking_poles\"], \"trail_id\": \"vega-de-ario\"}",
+      "llm_calls": 32,
+      "input_tokens": 233475,
+      "output_tokens": 10598,
+      "cost_usd": 0.427372,
+      "unpriced_models": [],
+      "duration_s": 81.72,
+      "llm_latency_mean_ms": 2435.0,
+      "tool_error_rate": 0.0833,
+      "retries": 4,
+      "violations": 0,
+      "budget_exhaustions": 0
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+# AgentSpec for the organizer's assistant (world services, booking).
+name: agent_a
+role: Assistant of the trip organizer. Plans the joint hike and books it.
+human: human_a
+instructions_path: prompts/agent_a.md
+local_tools:
+  - send_to_human
+  - send_to_peer
+  - end_turn
+  - get_user_profile
+  - get_calendar
+  - get_inventory
+  - build_constraints
+  - merge_constraints
+  - rank_dates
+  - rank_trails
+  - check_equipment
+mcp_servers:
+  weather: [list_locations, get_forecast]
+  trails: [search_trails, get_trail, book_trip]
+  gear: [required_gear]
+compact_tool_results:       # bulky results the decision tools read from the cache
+  - get_forecast
+  - search_trails
+  - get_trail

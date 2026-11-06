@@ -1,0 +1,47 @@
+# Application configuration. All tunable parameters live here (validated by picos.config).
+llm:
+  provider: fake            # google_genai | fake
+  models:
+    agents: gemini-3.6-flash
+    humans: gemini-3.5-flash-lite
+  temperature:              # null = do not send; Gemini 3.x drops sampling params
+    agents: null
+    humans: null
+  retry:                    # recorded retries of retryable model errors (429, 5xx, timeouts)
+    max_attempts: 4
+    base_delay_s: 1.0
+    max_delay_s: 20.0
+
+runtime:
+  max_ticks: 30
+  max_steps_per_turn: 12
+  max_negotiation_rounds: 4
+  runs_dir: runs
+
+faults:
+  seed_salt: 0
+  retry:
+    max_attempts: 3
+    base_delay_s: 0.2
+    max_delay_s: 2.0
+  tool_timeout_s: 5.0
+  default:
+    p_error: 0.1
+    p_timeout: 0.05
+  tools:
+    book_trip: {p_error: 0.2, p_timeout: 0.1}
+    rent_equipment: {p_error: 0.2, p_timeout: 0.1}
+
+humans:
+  provider: llm             # llm | scripted; llm.provider fake always uses scripted humans
+  prompts:
+    human_a: prompts/human_organizer.md
+    human_b: prompts/human_participant.md
+
+observability:
+  log_level: INFO
+  langsmith: auto           # enabled only if LANGSMITH_API_KEY is set
+
+prices:                     # USD per 1M tokens, used for cost estimates
+  gemini-3.6-flash: {input: 1.50, output: 7.50}
+  gemini-3.5-flash-lite: {input: 0.30, output: 2.50}

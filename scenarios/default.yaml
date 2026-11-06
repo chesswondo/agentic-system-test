@@ -1,0 +1,98 @@
+# Binding scenario. Simulation "today" is Monday 2026-11-16.
+name: picos-joint-day-hike
+today: 2026-11-16
+window_start: 2026-11-17
+window_end: 2026-11-30
+trip_type: day_hike
+
+planning:
+  seasons:
+    winter: [11, 12, 1, 2, 3]
+    summer: [4, 5, 6, 7, 8, 9, 10]
+  # "Reachable in the season": trails whose highest point is above this are excluded.
+  max_altitude_by_season_m:
+    winter: 1700
+  # Per-day weather penalty (lower is better), averaged over areas. See tools/decision.py.
+  date_scoring:
+    precipitation_mm: 1.0           # per mm
+    precipitation_probability: 5.0  # per 100 %
+    wind_threshold_kmh: 30
+    wind_per_kmh_over: 0.2
+    snowfall_cm: 2.0                # per cm
+    weather_code_class: {clear: 0, cloudy: 1, fog: 2, rain: 4, snow: 6, thunderstorm: 10}
+
+humans:
+  human_a:
+    name: Alice
+    persona:
+      style: Friendly and brief. Organizer of the trip. Cares about her knee.
+      known_facts:
+        - She wants an easy-to-moderate day hike with her friend Bob in the next two weeks.
+        - Her old knee injury makes long steep descents painful.
+        - She is busy with work from 2026-11-24 to 2026-11-26.
+      hidden_facts: []
+      decisions:
+        accept_final_plan: true
+    profile:
+      name: Alice
+      fitness: moderate
+      health_limits:
+        max_difficulty: moderate
+        max_elevation_gain_m: 800
+        max_duration_h: 6.0
+        avoid_exposure: false
+        notes: [old knee injury, avoid long steep descents]
+      notes: Prefers routes with good views; does not mind early starts.
+    calendar:
+      available_dates: [2026-11-17, 2026-11-18, 2026-11-19, 2026-11-20, 2026-11-21, 2026-11-22,
+                        2026-11-23, 2026-11-27, 2026-11-28, 2026-11-29, 2026-11-30]
+      notes: Work trip 2026-11-24..2026-11-26.
+    inventory:
+      items: [boots, waterproof_jacket, warm_layer, backpack, water_bottle, trekking_poles, gaiters]
+
+  human_b:
+    name: Bob
+    persona:
+      style: Relaxed and short-spoken. Answers only what he is asked.
+      known_facts:
+        - He can only hike on weekends.
+        - He is fit and has hiked a lot.
+        - His friend Alice is organizing the hike through her own assistant.
+      hidden_facts:
+        - text: He is afraid of heights and must avoid exposed paths with drops. He mentions it only when asked about restrictions or consent.
+          implies: {avoid_exposure: true}
+      decisions:
+        consent_to_share: true
+        rent_missing_gear: true
+        accept_final_plan: true
+    profile:
+      name: Bob
+      fitness: good
+      health_limits:
+        max_difficulty: hard
+        max_elevation_gain_m: 1500
+        max_duration_h: 9.0
+        avoid_exposure: false
+        notes: []
+      notes: Experienced hiker.
+    calendar:
+      available_dates: [2026-11-21, 2026-11-22, 2026-11-28, 2026-11-29]
+      notes: Weekends only.
+    inventory:
+      items: [boots, waterproof_jacket, warm_layer, backpack, water_bottle, headlamp]
+
+initial_messages:
+  - sender: human_a
+    recipient: agent_a
+    text: "Hi! I'd like to plan a day hike in Picos de Europa with my friend Bob sometime in the next two weeks. Nothing too extreme, my knee isn't great on long descents. Can you sort it out?"
+  - sender: human_b
+    recipient: agent_b
+    text: "Heads-up: my friend Alice is planning a hike for the two of us. I can only do weekends."
+
+expected_outcome:
+  date: 2026-11-22
+  trail_id: vega-de-ario
+  booking_confirmed: true
+  rented_items: [gaiters, trekking_poles]
+  must_bring:
+    human_a: [headlamp]

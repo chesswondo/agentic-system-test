@@ -1,0 +1,20 @@
+{
+  "rent-agent_a-2": {
+    "record": {
+      "date": "2026-11-22",
+      "items": [
+        "gaiters",
+        "trekking_poles"
+      ],
+      "rental_id": "RNT-0001",
+      "status": "confirmed"
+    },
+    "request": {
+      "date": "2026-11-22",
+      "items": [
+        "gaiters",
+        "trekking_poles"
+      ]
+    }
+  }
+}

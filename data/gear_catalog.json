@@ -1,0 +1,25 @@
+{
+  "items": [
+    {"id": "boots", "name": "Hiking boots", "category": "footwear", "rentable": false},
+    {"id": "waterproof_jacket", "name": "Waterproof jacket", "category": "clothing", "rentable": false},
+    {"id": "warm_layer", "name": "Warm layer (fleece or down)", "category": "clothing", "rentable": false},
+    {"id": "backpack", "name": "Day backpack", "category": "carry", "rentable": true},
+    {"id": "water_bottle", "name": "Water bottle (1.5 l)", "category": "hydration", "rentable": false},
+    {"id": "headlamp", "name": "Headlamp", "category": "safety", "rentable": true},
+    {"id": "trekking_poles", "name": "Trekking poles", "category": "support", "rentable": true},
+    {"id": "gaiters", "name": "Gaiters", "category": "footwear", "rentable": true},
+    {"id": "crampons", "name": "Crampons", "category": "winter", "rentable": true}
+  ],
+  "rules": [
+    {"id": "base", "when": {}, "items": ["boots", "waterproof_jacket", "backpack", "water_bottle"],
+     "reason": "Minimum kit for any day hike in the park."},
+    {"id": "winter", "when": {"seasons": ["winter"]}, "items": ["warm_layer", "headlamp", "gaiters"],
+     "reason": "Cold, about 9 h of daylight, mud and snow patches."},
+    {"id": "poles_difficulty", "when": {"min_difficulty": "moderate"}, "items": ["trekking_poles"],
+     "reason": "Uneven terrain and descents."},
+    {"id": "poles_elevation", "when": {"min_elevation_gain_m": 500}, "items": ["trekking_poles"],
+     "reason": "Significant elevation gain and loss."},
+    {"id": "winter_high", "when": {"seasons": ["winter"], "min_max_altitude_m": 1800}, "items": ["crampons"],
+     "reason": "Hard snow and ice at altitude."}
+  ]
+}

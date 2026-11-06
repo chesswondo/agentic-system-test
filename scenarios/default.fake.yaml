@@ -1,0 +1,116 @@
+# Scripted LLM responses for `--llm fake` (offline runs and the end-to-end test).
+# One entry = one LLM response, consumed in order across the agent's turns. The decision tools still run for real, and tests check that their results
+# agree with the choices written here. Message ids are deterministic: <agent>-<n>.
+agent_a:
+  # Turn 1 (tick 0): Alice's request.
+  - tool_calls:
+      - {name: get_user_profile}
+      - {name: get_calendar}
+      - {name: list_locations}
+  - tool_calls:
+      - {name: build_constraints, args: {overrides_json: ""}}
+      - {name: get_forecast, args: {location_id: western_massif, start_date: "2026-11-17", end_date: "2026-11-30"}}
+      - {name: get_forecast, args: {location_id: central_massif, start_date: "2026-11-17", end_date: "2026-11-30"}}
+      - {name: get_forecast, args: {location_id: eastern_liebana, start_date: "2026-11-17", end_date: "2026-11-30"}}
+      - {name: search_trails, args: {max_difficulty: moderate}}
+  - tool_calls:
+      - name: send_to_peer
+        args:
+          performative: REQUEST_CONSTRAINTS
+          payload_json: '{"window_start": "2026-11-17", "window_end": "2026-11-30", "trip_type": "day_hike"}'
+          text: Alice wants a joint day hike in the next two weeks. Which dates and limits work for Bob?
+  - tool_calls:
+      - {name: end_turn, args: {reason: Waiting for Bob's constraints.}}
+  # Turn 2 (tick 4): Bob's CONSTRAINTS (agent_b-2).
+  - tool_calls:
+      - name: merge_constraints
+        args:
+          constraints_json_list:
+            - '{"available_dates":["2026-11-17","2026-11-18","2026-11-19","2026-11-20","2026-11-21","2026-11-22","2026-11-23","2026-11-27","2026-11-28","2026-11-29","2026-11-30"],"max_difficulty":"moderate","max_elevation_gain_m":800,"max_duration_h":6.0,"avoid_exposure":false,"notes":["avoid long steep descents","old knee injury"]}'
+            - '{"available_dates":["2026-11-21","2026-11-22","2026-11-28","2026-11-29"],"max_difficulty":"hard","max_elevation_gain_m":1500,"max_duration_h":9.0,"avoid_exposure":true,"notes":[]}'
+  - tool_calls:
+      - name: rank_dates
+        args:
+          constraints_json: &merged '{"available_dates":["2026-11-21","2026-11-22","2026-11-28","2026-11-29"],"max_difficulty":"moderate","max_elevation_gain_m":800,"max_duration_h":6.0,"avoid_exposure":true,"notes":["avoid long steep descents","old knee injury"]}'
+          location_ids: [western_massif, central_massif, eastern_liebana]
+  - tool_calls:
+      - {name: rank_trails, args: {constraints_json: *merged, date: "2026-11-22"}}
+  - tool_calls:
+      - {name: required_gear, args: {trail_id: vega-de-ario, date: "2026-11-22"}}
+      - {name: update_plan_draft, args: {key: proposal, value: "2026-11-22 vega-de-ario"}}
+  - tool_calls:
+      - name: send_to_peer
+        args:
+          performative: PROPOSAL
+          payload_json: '{"date": "2026-11-22", "trail_id": "vega-de-ario", "trail_summary": "Vega de Ario from Lago de la Ercina: 5 h, 700 m gain, moderate, no exposed sections", "required_gear": ["backpack", "boots", "gaiters", "headlamp", "trekking_poles", "warm_layer", "water_bottle", "waterproof_jacket"], "proposal_round": 1}'
+          text: Sunday 2026-11-22 on Vega de Ario is the best common date and the best trail for both.
+          in_reply_to: agent_b-2
+  - tool_calls:
+      - {name: end_turn, args: {reason: Waiting for Bob's answer to the proposal.}}
+  # Turn 3 (tick 8): ACCEPT with the rental confirmation (agent_b-4).
+  - tool_calls:
+      - name: check_equipment
+        args:
+          required_items: [backpack, boots, gaiters, headlamp, trekking_poles, warm_layer, water_bottle, waterproof_jacket]
+      - {name: book_trip, args: {trail_id: vega-de-ario, date: "2026-11-22", party_size: 2, idempotency_key: agent_a-book-agent_a-2}}
+  - tool_calls:
+      - name: send_to_human
+        args:
+          kind: final_plan
+          text: "Your hike is booked: Sunday 2026-11-22, Vega de Ario. Please bring a headlamp; Bob is renting poles and gaiters."
+          plan_json: '{"date": "2026-11-22", "trail_id": "vega-de-ario", "trail_name": "Vega de Ario (PR-PNPE 4) from Lago de la Ercina", "booking_id": "BKG-0001", "weather_summary": "Best common date: dry and calm in the western massif.", "participants": [{"participant": "human_a", "has": ["backpack", "boots", "gaiters", "trekking_poles", "warm_layer", "water_bottle", "waterproof_jacket"], "rented": [], "must_bring": ["headlamp"]}, {"participant": "human_b", "has": ["backpack", "boots", "headlamp", "warm_layer", "water_bottle", "waterproof_jacket"], "rented": ["gaiters", "trekking_poles"], "must_bring": []}], "safety_notes": ["Short November daylight: start early.", "Route avoids exposed sections."]}'
+  - tool_calls:
+      - {name: end_turn, args: {reason: Final plan sent to Alice.}}
+
+agent_b:
+  # Turn 1 (tick 0): Bob's heads-up. Nothing to send yet.
+  - tool_calls:
+      - {name: get_calendar}
+  - tool_calls:
+      - {name: end_turn, args: {reason: Waiting for Alice's assistant.}}
+  # Turn 2 (tick 1): REQUEST_CONSTRAINTS (agent_a-1).
+  - tool_calls:
+      - {name: get_user_profile}
+  - tool_calls:
+      - name: send_to_human
+        args:
+          kind: question
+          text: Alice's assistant asks for your trip constraints. May I share your available dates and limits with it? Are there any restrictions I should know about?
+  - tool_calls:
+      - {name: end_turn, args: {reason: Waiting for Bob's consent.}}
+  # Turn 3 (tick 3): Bob consents and reveals the fear of heights.
+  - tool_calls:
+      - {name: build_constraints, args: {overrides_json: '{"avoid_exposure": true}'}}
+  - tool_calls:
+      - name: send_to_peer
+        args:
+          performative: CONSTRAINTS
+          payload_json: '{"available_dates":["2026-11-21","2026-11-22","2026-11-28","2026-11-29"],"max_difficulty":"hard","max_elevation_gain_m":1500,"max_duration_h":9.0,"avoid_exposure":true,"notes":[]}'
+          text: Bob is free on weekends only and must avoid exposed paths.
+          in_reply_to: agent_a-1
+  - tool_calls:
+      - {name: end_turn, args: {reason: Constraints shared with consent.}}
+  # Turn 4 (tick 5): PROPOSAL (agent_a-2).
+  - tool_calls:
+      - name: check_equipment
+        args:
+          required_items: [backpack, boots, gaiters, headlamp, trekking_poles, warm_layer, water_bottle, waterproof_jacket]
+  - tool_calls:
+      - name: send_to_human
+        args:
+          kind: question
+          text: The plan is Sunday 2026-11-22 on Vega de Ario. You are missing trekking poles and gaiters. Shall I rent them for you?
+  - tool_calls:
+      - {name: end_turn, args: {reason: Waiting for Bob's decision on the rental.}}
+  # Turn 5 (tick 7): Bob agrees to rent.
+  - tool_calls:
+      - {name: rent_equipment, args: {items: [gaiters, trekking_poles], date: "2026-11-22", idempotency_key: agent_b-rent-agent_a-2}}
+  - tool_calls:
+      - name: send_to_peer
+        args:
+          performative: ACCEPT
+          payload_json: '{"proposal_msg_id": "agent_a-2", "rented_items": ["gaiters", "trekking_poles"], "rental_confirmation_id": "RNT-0001"}'
+          text: Bob accepts; poles and gaiters are rented.
+          in_reply_to: agent_a-2
+  - tool_calls:
+      - {name: end_turn, args: {reason: Proposal accepted.}}
